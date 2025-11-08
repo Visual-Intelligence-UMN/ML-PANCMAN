@@ -10,7 +10,7 @@ import { useAtom } from "jotai";
 export default function PacMan() {
     const [isRunning, setIsRuning] = useAtom(gameRunningAtom);
     const [predictionDirection] = useAtom(predictionAtom);
-    const { speedMultiplier } = useEmotionContext(); // Feature 2
+    const { speedMultiplier, isAngryDetected } = useEmotionContext(); // Feature 2
 
     const pacManProps = {
         gridSize: 17,
@@ -29,6 +29,7 @@ export default function PacMan() {
                 setIsRuning={setIsRuning}
                 predictions={predictionDirection}
                 speedMultiplier={speedMultiplier} // Feature 2
+                isAngryDetected={isAngryDetected}
             />
             {!isRunning && (
                 <Button

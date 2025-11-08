@@ -55,6 +55,22 @@ function calcAngleLose({ angle }) {
   return Math.min(Math.PI * 2, angle + 0.5)
 }
 
+// Helper: interpolate between two hex colors based on t in [0,1]
+function lerpHexColor(a, b, t) {
+  const ah = a.replace('#', '');
+  const bh = b.replace('#', '');
+  const ar = parseInt(ah.substring(0, 2), 16);
+  const ag = parseInt(ah.substring(2, 4), 16);
+  const ab = parseInt(ah.substring(4, 6), 16);
+  const br = parseInt(bh.substring(0, 2), 16);
+  const bg = parseInt(bh.substring(2, 4), 16);
+  const bb = parseInt(bh.substring(4, 6), 16);
+  const rr = Math.round(ar + (br - ar) * t).toString(16).padStart(2, '0');
+  const rg = Math.round(ag + (bg - ag) * t).toString(16).padStart(2, '0');
+  const rb = Math.round(ab + (bb - ab) * t).toString(16).padStart(2, '0');
+  return `#${rr}${rg}${rb}`;
+}
+
 export default class Player extends Component {
 
   constructor(props) {
@@ -140,11 +156,17 @@ export default class Player extends Component {
   }
 
   render() {
-    const { gridSize, lost, position, direction } = this.props;
+  const { gridSize, lost, position, direction, speedMultiplier = 1.0, isAngryDetected = false } = this.props;
+
+    const isAngry = isAngryDetected || speedMultiplier !== 1.0;
+
+    // choose fill color based on anger / speed
+    const angryT = Math.min(1, Math.max(0, (speedMultiplier - 1) / 2)); // 0..1 when speedMultiplier in [1,3]
+    const fillColor = isAngry ? lerpHexColor('#ffd42a', '#ff4d4d', angryT) : 'yellow';
 
     const pathProps = {
       stroke: 'none',
-      fill: 'yellow'
+      fill: fillColor
     };
 
     const radius = gridSize * PLAYER_RADIUS;
@@ -159,9 +181,30 @@ export default class Player extends Component {
 
     const offset = lost ? 1 : direction;
 
+    // coordinates relative to center
+    const cx = radius;
+    const cy = radius;
+
+    // angry features placement
+    const eyeOffsetX = radius * 0.4;
+    const eyeOffsetY = radius * 0.1;
+    const eyeR = Math.max(1, radius * 0.12);
+
     return (
       <svg className="pacmancovid-player" style={style}>
           <path d={pacmanPath(radius, this.state.angle, offset)} {...pathProps} />
+
+          {isAngry && (
+            <g className="angry-features">
+              {/* angry eyebrows (slanted lines) */}
+              <path d={`M ${cx - eyeOffsetX - eyeR}, ${cy - eyeOffsetY - eyeR} L ${cx - eyeOffsetX + eyeR}, ${cy - eyeOffsetY - eyeR - 2}`} stroke="#2b2b2b" strokeWidth={Math.max(1, radius * 0.06)} strokeLinecap="round" fill="none" />
+              <path d={`M ${cx + eyeOffsetX - eyeR}, ${cy - eyeOffsetY - eyeR - 2} L ${cx + eyeOffsetX + eyeR}, ${cy - eyeOffsetY - eyeR}`} stroke="#2b2b2b" strokeWidth={Math.max(1, radius * 0.06)} strokeLinecap="round" fill="none" />
+
+              {/* angry eyes (small dark circles) */}
+              <circle cx={cx - eyeOffsetX} cy={cy - eyeOffsetY} r={eyeR} fill="#1a1a1a" />
+              <circle cx={cx + eyeOffsetX} cy={cy - eyeOffsetY} r={eyeR} fill="#1a1a1a" />
+            </g>
+          )}
       </svg>
     );
   }
@@ -174,5 +217,13 @@ Player.propTypes = {
   lost: PropTypes.bool.isRequired,
   position: PropTypes.array.isRequired,
   direction: PropTypes.number.isRequired,
-  onEnd: PropTypes.func
+  onEnd: PropTypes.func,
+  speedMultiplier: PropTypes.number,
+  isAngryDetected: PropTypes.bool
+};
+
+// New props
+Player.defaultProps = {
+  speedMultiplier: 1.0,
+  isAngryDetected: false
 };
