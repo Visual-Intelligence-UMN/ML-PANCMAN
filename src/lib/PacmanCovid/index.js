@@ -9,6 +9,7 @@ import TopBar from "./TopBar";
 import AllFood from "./Food/All";
 import Monster from "./Monster";
 import Player from "./Player";
+import ValidationOverlay from "./ValidationOverlay";
 
 export default class PacmanCovid extends Component {
   constructor(props) {
@@ -93,6 +94,10 @@ export default class PacmanCovid extends Component {
       <Monster key={id} {...props} {...monster} />
     ));
 
+    const showValidation = this.props.isRunning && 
+                           this.props.validationActive && 
+                           this.props.validationDirection;
+
     return (
       <div className="wrapper-container">
         <Stage {...props} />
@@ -106,6 +111,15 @@ export default class PacmanCovid extends Component {
           isRunning={this.props.isRunning}
           onEnd={this.handleTheEnd}
         />
+        {showValidation && (
+          <ValidationOverlay
+            {...props}
+            position={this.state.player.position}
+            validationConfidence={this.props.validationConfidence}
+            validationDirection={this.props.validationDirection}
+            validationThreshold={this.props.validationThreshold}
+          />
+        )}
         <Dialog
           open={this.state.isShowDialog}
           onClose={() => {

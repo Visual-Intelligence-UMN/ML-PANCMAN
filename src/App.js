@@ -57,7 +57,31 @@ export default function App() {
                         <Grid container spacing={3}>
 
                             {/* Chart */}
-                            <Grid item xs={12} md={6} lg={6}>
+                            <Grid 
+                                item 
+                                xs={12} 
+                                md={6} 
+                                lg={6}
+                                sx={{
+                                    position: 'relative',
+                                    ...(gameRunning && {
+                                        '&::before': {
+                                            content: '""',
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            backdropFilter: 'blur(4px) brightness(0.95)',
+                                            WebkitBackdropFilter: 'blur(4px) brightness(0.95)',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                            zIndex: 1,
+                                            pointerEvents: 'none',
+                                            transition: 'all 0.3s ease-in-out',
+                                        }
+                                    })
+                                }}
+                            >
                                 <Paper
                                     sx={{
                                         p: 2,

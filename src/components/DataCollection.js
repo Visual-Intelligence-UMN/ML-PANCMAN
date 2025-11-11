@@ -233,9 +233,10 @@ const CameraOverlay = ({
         const innerStart = Math.max(edgeFeather, 0);
         const innerEnd = Math.max(innerStart, spread - edgeFeather);
         const wedgeGradient = `conic-gradient(from ${start}deg, transparent 0deg, transparent ${innerStart}deg, ${wedgeColor} ${innerStart}deg, ${wedgeColor} ${innerEnd}deg, transparent ${innerEnd}deg, transparent 360deg)`;
-        const innerFade = clamp(34 - normalizedConfidence * 10, 20, 34);
-        const outerFade = Math.min(innerFade + 10, 48);
-        const radialMask = `radial-gradient(circle at center, transparent 0%, transparent ${innerFade}%, rgba(0,0,0,0.85) ${outerFade}%, rgba(0,0,0,1) 100%)`;
+        const innerFade = clamp(30 - normalizedConfidence * 8, 18, 30);
+        const midFade = innerFade + 12;
+        const outerFade = midFade + 20;
+        const radialMask = `radial-gradient(circle at center, transparent 0%, transparent ${innerFade}%, rgba(0,0,0,0.3) ${midFade}%, rgba(0,0,0,0.7) ${outerFade}%, rgba(0,0,0,1) 100%)`;
         highlightStyle = {
             backgroundImage: wedgeGradient,
             opacity: clamp(0.2 + normalizedConfidence, 0, 1),

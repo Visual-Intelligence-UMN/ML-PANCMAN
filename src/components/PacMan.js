@@ -5,11 +5,19 @@ import PacmanCovid from "../lib/PacmanCovid";
 import {
     gameRunningAtom,
     predictionAtom,
+    validationActiveAtom,
+    validationConfidenceAtom,
+    validationDirectionAtom,
+    validationThresholdAtom,
 } from "../GlobalState";
 import { useAtom } from "jotai";
 export default function PacMan() {
     const [isRunning, setIsRuning] = useAtom(gameRunningAtom);
     const [predictionDirection] = useAtom(predictionAtom);
+    const [validationActive] = useAtom(validationActiveAtom);
+    const [validationConfidence] = useAtom(validationConfidenceAtom);
+    const [validationDirection] = useAtom(validationDirectionAtom);
+    const [validationThreshold] = useAtom(validationThresholdAtom);
     const { speedMultiplier, isAngryDetected } = useEmotionContext(); // Feature 2
 
     const pacManProps = {
@@ -30,6 +38,10 @@ export default function PacMan() {
                 predictions={predictionDirection}
                 speedMultiplier={speedMultiplier} // Feature 2
                 isAngryDetected={isAngryDetected}
+                validationActive={validationActive}
+                validationConfidence={validationConfidence}
+                validationDirection={validationDirection}
+                validationThreshold={validationThreshold}
             />
             {!isRunning && (
                 <Button
