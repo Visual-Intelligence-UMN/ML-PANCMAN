@@ -130,7 +130,7 @@ function loadImage(base64) {
  * @returns {number} Speed multiplier (1.0 to 3.0)
  */
 
-function calculateSpeedMultiplier(angerScore, threshold = 0.7) {
+function calculateSpeedMultiplier(angerScore, threshold = 0.5) {
     // If no anger detected or below threshold, normal speed
     if (!angerScore || angerScore < threshold) {
         return 1.0;
