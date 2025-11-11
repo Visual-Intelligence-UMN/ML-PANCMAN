@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useAtom } from "jotai";
 import { gameRunningAtom } from "./GlobalState";
 import PacMan from "./components/PacMan";
@@ -25,6 +26,7 @@ export default function App() {
     // Feature 2
     const [gameRunning] = useAtom(gameRunningAtom);
     const emotionState = useEmotionDetection(webcamRef, true); // once the user starts the camera, the face dectection will run
+    const [isEmotionDropdownOpen, setIsEmotionDropdownOpen] = useState(false);
 
     return (
         <EmotionContext.Provider value={emotionState}>
@@ -69,17 +71,6 @@ export default function App() {
                                     {/* part 1 where we collect training data */}
                                     <DataCollection webcamRef={webcamRef} />
                                 </Paper>
-
-                                {/* Feature 2*/}
-                                <Paper sx={{
-                                    p: 2,
-                                    textAlign: 'center',
-                                    marginBottom: 3,
-                                    backgroundColor: emotionState.isAngryDetected ? '#ffcccc' : 'white'
-                                }}>
-                                    How angry are you right now?  😠 <br />
-                                </Paper>
-
                                 <Paper
                                     sx={{
                                         p: 2,
@@ -106,6 +97,42 @@ export default function App() {
                                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
                                     <PacMan />
                                 </Paper>
+                                {/* Feature 2*/}
+                                <Paper
+                                    sx={{
+                                        p: 2,
+                                        textAlign: 'center',
+                                        marginTop: 3,
+                                        backgroundColor: emotionState.isAngryDetected ? '#d63737ff' : 'white',
+                                        cursor: 'pointer'  // Show it's clickable
+                                    }}
+                                    onClick={() => setIsEmotionDropdownOpen(!isEmotionDropdownOpen)}
+                                >
+                                    AngerScore: {(emotionState.angerScore * 100).toFixed(0)}%
+                                    <span style={{ marginLeft: '10px' }}>
+                                        {isEmotionDropdownOpen ? '▲' : '▼'} See more scores
+                                    </span>
+                                    <br />
+                                </Paper>
+                                {isEmotionDropdownOpen && emotionState.emotion && (
+                                    <Paper sx={{ p: 2, marginTop: 3 }}>
+                                        <Typography variant="h6" gutterBottom>All Emotions:</Typography>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                            {Object.entries(emotionState.emotion).map(([emotionName, score]) => (
+                                                <span
+                                                    key={emotionName}
+                                                    style={{
+                                                        flexBasis: 'calc(33.33% - 10px)',  // 3 items per row
+                                                        minWidth: '120px'
+                                                    }}
+                                                >
+                                                    <strong>{emotionName.charAt(0).toUpperCase() + emotionName.slice(1)}:</strong> {(score *
+                                                        100).toFixed(0)}%
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </Paper>
+                                )}
                             </Grid>
                         </Grid>
                     </Container>
