@@ -37,6 +37,25 @@ Check out the [Live Demo](https://visual-intelligence-umn.github.io/ML-PANCMAN/)
   The project will open in your default web browser.
   Any code changes will automatically update the webpage.
   Google Chrome is recommended for the development.
+
+## Deploy to Github Page
+
+#### 1. Build and Push
+  Run `npm run deploy` in your terminal
+
+#### 2. Configure GitHub Page
+
+1. In your web browser, go to the forked project in your github, and select the "Settings" tab.
+2. In the sidebar, under "Code and automation," choose "Pages."
+3. Set up "Build and deployment" as follows:
+   - Source: `Deploy from a branch`
+   - Branch: `gh-pages`; Folder: `/ (root)`
+4. Click "Save."
+
+![image](https://github.com/wangqianwen0418/tfjs-webcam-ML-PACMAN/assets/19774198/8f1a2975-7fa0-4f33-83cf-5ad706d70af6)
+
+ You can now share this demo via `https://{your_github_userid}.github.io/ML-PACMAN/`
+
   
 ## Acknowledgement
 This project is a modified version based on the official TensorFlow.js demos. 
